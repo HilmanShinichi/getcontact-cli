@@ -1,3 +1,4 @@
+<img width="992" height="568" alt="gtc-cli" src="https://github.com/user-attachments/assets/738b4102-1d61-4cd5-846a-6f2bcfbea9aa" />
 # gtc — GetContact CLI
 
 GetContact CLI adalah project Python untuk melakukan lookup nomor telepon lewat API GetContact, tanpa aplikasi Android dan tanpa browser.
