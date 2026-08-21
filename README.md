@@ -1,56 +1,129 @@
 # GetContact CLI
 
-GetContact CLI adalah project Python untuk melakukan lookup nomor telepon lewat API GetContact, tanpa aplikasi Android dan tanpa browser.
+GetContact CLI adalah project Python untuk melakukan komunikasi dengan API GetContact melalui command-line interface (CLI), tanpa menggunakan aplikasi Android maupun browser.
 
 <img width="992" height="568" alt="gtc-cli" src="https://github.com/user-attachments/assets/738b4102-1d61-4cd5-846a-6f2bcfbea9aa" />
 
+Project ini dibuat sebagai **research dan learning project** untuk memahami bagaimana aplikasi mobile berkomunikasi dengan backend service serta bagaimana proses autentikasi dan request API bekerja.
+
+## Features
+
 Yang bisa dilakukan:
 
-- lihat profil sebuah nomor (nama yang ditampilkan GetContact, jumlah tag, email jika ada)
-- lihat daftar tag sebuah nomor — bagaimana orang lain menyimpan nomor itu di kontak mereka
-- cek sisa kuota pencarian akun
-- lookup massal dari file CSV
-- menyelesaikan captcha ketika akun kena rate limit (HTTP 403)
-- membuat kredensial baru sendiri lewat verifikasi WhatsApp
-- menyimpan beberapa akun dan berpindah di antaranya
+- melihat informasi sebuah nomor (nama yang ditampilkan oleh GetContact, jumlah tag, email jika tersedia)
+- melihat daftar tag sebuah nomor berdasarkan data yang tersedia dari service
+- mengecek sisa kuota pencarian akun
+- melakukan lookup beberapa nomor sekaligus menggunakan file CSV
+- menangani captcha ketika akun terkena rate limit (HTTP 403)
+- membuat kredensial akun sendiri melalui proses verifikasi WhatsApp
+- menyimpan beberapa akun dan berpindah antar akun
 
-Setiap keluaran perintah otomatis tersimpan ke folder `results/`.
+Setiap output perintah otomatis tersimpan ke folder `results/`.
 
-## Kebutuhan
+---
 
-Python 3.9 atau lebih baru, dan dua paket:
+## ⚠️ Disclaimer
 
-```bash
-pip install requests cryptography
+Project ini adalah **independent research project** dan tidak berafiliasi, didukung, maupun berhubungan secara resmi dengan GetContact.
+
+Tool ini dibuat untuk tujuan:
+- pembelajaran teknis
+- penelitian API communication
+- eksplorasi bagaimana sebuah service bekerja
+
+Pengguna bertanggung jawab penuh terhadap penggunaan tool ini.
+
+Harap gunakan secara bertanggung jawab dan selalu menghormati:
+- privasi pengguna lain
+- peraturan yang berlaku
+- Terms of Service dari layanan terkait
+
+Project ini tidak ditujukan untuk:
+- penyalahgunaan data pribadi
+- pengumpulan data secara massal
+- aktivitas yang merugikan pihak lain
+
+---
+
+## How It Works
+
+Secara sederhana, flow kerja tool ini:
+
+```
+User Input
+    |
+    v
+GetContact CLI
+    |
+    v
+Authenticated API Request
+    |
+    v
+GetContact Service
+    |
+    v
+CLI Output
 ```
 
-Sudah diuji di Windows (git-bash) dan Linux. Tidak ada langkah build, tidak ada file konfigurasi
-yang perlu diedit.
+Semua proses dilakukan dari sisi client dan hasil response diproses secara lokal.
 
-## Menjalankan
+Project ini tidak menyediakan server pihak ketiga, database terpusat, maupun shared account.
 
-### Mode menu (untuk pemakaian sehari-hari)
+---
 
-```bash
-python gtc.py
-```
+## Credential & Account Safety
 
-Tanpa argumen apa pun, program menampilkan daftar fitur bernomor:
+Tool ini membutuhkan kredensial akun milik pengguna sendiri.
 
-```
-Pilih fitur:
-  1. Cari profil nomor        (nama pemilik)
-  2. Cari tag nomor           (nama tersimpan orang lain)
-  3. Sisa kuota akun
-  4. Cari banyak nomor dari file CSV
-  5. Buka blokir / captcha
-  6. Lihat akun tersimpan
-  7. Tambah akun baru (butuh WhatsApp)
-  0. Keluar
-```
+Beberapa hal yang perlu diperhatikan:
 
-Pilih nomornya, masukkan nomor HP target, hasil langsung tampil. Setelah selesai program kembali ke
-menu, jadi bisa melakukan beberapa pencarian berturut-turut tanpa mengetik ulang perintah. Kalau satu
+- Jangan membagikan token/session credential kepada orang lain.
+- Jangan commit file credential ke repository publik.
+- Gunakan akun testing terpisah jika diperlukan.
+- Jangan menyimpan credential di screenshot atau forum publik.
+
+Credential adalah tanggung jawab masing-masing pengguna.
+
+---
+
+## Data & Privacy
+
+Project ini tidak secara sengaja mengumpulkan atau menyimpan data pengguna pada server eksternal.
+
+Namun, pengguna tetap perlu memperhatikan bahwa:
+
+- folder `results/` dapat berisi informasi sensitif
+- command history dapat menyimpan nomor yang pernah dicari
+- hasil lookup harus diperlakukan secara bertanggung jawab
+
+Jangan mendistribusikan informasi pribadi tanpa izin.
+
+---
+
+## Limitations
+
+Perlu dipahami bahwa:
+
+- API dapat berubah sewaktu-waktu.
+- Akun dapat terkena pembatasan jika melakukan request berlebihan.
+- Hasil yang diberikan bergantung pada availability service.
+- Project ini bukan official client dari GetContact.
+
+---
+
+## Contributing
+
+Pull request dan feedback sangat diterima.
+
+Jika menemukan masalah security, harap jangan langsung mempublikasikan detail sensitif pada issue.
+
+Silakan gunakan responsible disclosure agar masalah dapat ditinjau terlebih dahulu.
+
+---
+
+## License
+
+Gunakan project ini secara bertanggung jawab.menu, jadi bisa melakukan beberapa pencarian berturut-turut tanpa mengetik ulang perintah. Kalau satu
 pencarian gagal — nomor salah format, kuota habis, jaringan putus — pesan errornya ditampilkan dan
 menu tetap hidup.
 
@@ -114,17 +187,13 @@ Membuat yang baru dari nol:
 python gtc.py generate 08123456789
 ```
 
-Perintah ini mendaftarkan perangkat palsu, menegosiasikan kunci enkripsi lewat Diffie-Hellman, lalu
-meminta verifikasi kepemilikan nomor melalui VerifyKit. Di tengah proses akan muncul sebuah link
-WhatsApp beserta kode; kirim pesan tersebut dari nomor yang bersangkutan, tunggu centang dua, baru
-tekan Enter. Kredensial hasilnya langsung tersimpan.
+Perintah ini mendaftarkan perangkat palsu, menegosiasikan kunci enkripsi lewat Diffie-Hellman, lalu meminta verifikasi kepemilikan nomor melalui VerifyKit. Di tengah proses akan muncul sebuah link WhatsApp beserta kode; kirim pesan tersebut dari nomor yang bersangkutan, tunggu centang dua, baru tekan Enter. Kredensial hasilnya langsung tersimpan.
 
 Lokasi penyimpanan bisa dipindah lewat `GTC_CONFIG_DIR`.
 
 ## Folder results
 
-Setiap kali sebuah perintah dijalankan, apa yang tampil di layar juga ditulis ke `results/` dengan
-nama berpola waktu:
+Setiap kali sebuah perintah dijalankan, apa yang tampil di layar juga ditulis ke `results/` dengan nama berpola waktu:
 
 ```
 results/20260820-101307-search-08123456789.txt
@@ -132,11 +201,9 @@ results/20260820-100248-quota.txt
 results/20260820-101512-batch.csv
 ```
 
-Ekstensinya `.json` bila memakai `--json`. Perintah `batch` tanpa `-o` otomatis menulis CSV-nya ke
-sini juga. Path file yang tersimpan dicetak ke stderr, sehingga stdout tetap bersih dan aman
-di-pipe. Folder ini ada di `.gitignore` karena isinya data nomor telepon orang.
+Ekstensinya `.json` bila memakai `--json`. Perintah `batch` tanpa `-o` otomatis menulis CSV-nya ke sini juga. Path file yang tersimpan dicetak ke stderr, sehingga stdout tetap bersih dan aman di-pipe. Folder ini ada di `.gitignore` karena isinya data nomor telepon orang.
 
-Ganti lokasinya dengan `GTC_RESULTS_DIR`. Belum ada rotasi atau penghapusan otomatis — kalau
+Ganti lokasinya dengan `GTC_RESULTS_DIR`. Belum ada rotasi atau penghapusan otomatis jika
 foldernya membesar, bersihkan manual.
 
 ## Variabel lingkungan
@@ -154,19 +221,16 @@ Klien ini meniru aplikasi Android GetContact 8.4.0. Setiap permintaan:
 1. Payload JSON dienkripsi AES-256-ECB memakai `finalKey` milik akun, lalu dikirim sebagai
    `{"data": "<base64>"}`.
 2. Header `x-req-signature` berisi HMAC-SHA256 dari `<timestamp>-<payload mentah>` dengan kunci
-   aplikasi yang tetap.
+aplikasi yang tetap.
 3. Respons yang punya field `data` didekripsi dengan kunci yang sama sebelum di-parse.
 
 `finalKey` sendiri lahir dari pertukaran Diffie-Hellman saat registrasi: klien mengirim kunci
 publiknya, server membalas dengan miliknya, dan SHA-256 dari shared secret menjadi kunci AES-nya.
 Parameter DH (`p = 900719898367`, `g = 7`) sudah tertanam di kode dan terverifikasi.
 
-Dua endpoint dipakai untuk lookup, dan penamaannya menyesatkan: `/v2.8/search` mengembalikan
-**profil**, sementara `/v2.8/number-detail` mengembalikan **daftar tag**. Pemetaan ini pernah tertukar
-dan sekarang sudah diluruskan di `api_search()`.
+Dua endpoint dipakai untuk lookup, dan penamaannya menyesatkan: `/v2.8/search` mengembalikan **profil**, sementara `/v2.8/number-detail` mengembalikan **daftar tag**. Pemetaan ini pernah tertukar dan sekarang sudah diluruskan di `api_search()`.
 
-Registrasi memakai VerifyKit (`api.verifykit.com`) sebagai penyedia verifikasi, dengan skema HMAC dan
-AES yang serupa tapi memakai kunci berbeda.
+Registrasi memakai VerifyKit (`api.verifykit.com`) sebagai penyedia verifikasi, dengan skema HMAC dan AES yang serupa tapi memakai kunci berbeda.
 
 ## Batasan
 
@@ -175,12 +239,8 @@ AES yang serupa tapi memakai kunci berbeda.
 - Kuota pencarian mengikuti langganan akun. Habis kuota berarti error, bukan hasil kosong.
 - Permintaan yang terlalu cepat memicu captcha. Naikkan `--delay` pada `batch`, dan pakai perintah
   `captcha` bila terlanjur kena.
-- Kunci HMAC dan versi aplikasi bersifat statis. Kalau GetContact mengganti keduanya, konstanta di
-  bagian atas `gtc.py` harus diperbarui.
+- Kunci HMAC dan versi aplikasi bersifat statis. Kalau GetContact mengganti keduanya, konstanta di bagian atas `gtc.py` harus diperbarui.
 
-## Catatan penggunaan
+## Notes
 
-Alat ini mengakses API privat GetContact dengan menyamar sebagai klien resminya, yang hampir pasti
-melanggar syarat layanan mereka. Data yang dikembalikan juga data pribadi orang lain. Pakai untuk
-nomor yang memang berhak Anda periksa, patuhi aturan perlindungan data yang berlaku, dan tanggung
-sendiri risikonya. Tidak ada afiliasi dengan GetContact.
+Alat ini mengakses API privat GetContact dengan menyamar sebagai klien resminya, yang hampir melanggar syarat layanan mereka. Data yang dikembalikan juga data pribadi orang lain. Pakai untuk nomor yang memang berhak Anda periksa, patuhi aturan perlindungan data yang berlaku, dan tanggung sendiri resikonya. Tidak ada afiliasi dengan GetContact dan pihak manapun. #DWYOR
