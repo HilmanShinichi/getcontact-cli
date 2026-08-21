@@ -121,11 +121,39 @@ Silakan gunakan responsible disclosure agar masalah dapat ditinjau terlebih dahu
 
 ---
 
-## License
+## Kebutuhan
 
-Gunakan project ini secara bertanggung jawab.menu, jadi bisa melakukan beberapa pencarian berturut-turut tanpa mengetik ulang perintah. Kalau satu
-pencarian gagal — nomor salah format, kuota habis, jaringan putus — pesan errornya ditampilkan dan
-menu tetap hidup.
+Python 3.9 atau lebih baru, dan dua paket:
+
+```bash
+pip install requests cryptography
+```
+
+Sudah diuji di Windows (git-bash) dan Linux. Tidak ada langkah build, tidak ada file konfigurasi yang perlu diedit.
+
+## Menjalankan
+
+### Mode menu (untuk pemakaian sehari-hari)
+
+```bash
+python gtc.py
+```
+
+Tanpa argumen apa pun, program menampilkan daftar fitur bernomor:
+
+```
+Pilih fitur:
+  1. Cari profil nomor        (nama pemilik)
+  2. Cari tag nomor           (nama tersimpan orang lain)
+  3. Sisa kuota akun
+  4. Cari banyak nomor dari file CSV
+  5. Buka blokir / captcha
+  6. Lihat akun tersimpan
+  7. Tambah akun baru (butuh WhatsApp)
+  0. Keluar
+```
+
+Pilih nomornya, masukkan nomor HP target, hasil langsung tampil. Setelah selesai program kembali ke menu, jadi bisa melakukan beberapa pencarian berturut-turut tanpa mengetik ulang perintah. Kalau satu pencarian gagal — nomor salah format, kuota habis, jaringan putus — pesan errornya ditampilkan dan menu tetap hidup.
 
 ### Mode perintah (untuk scripting)
 
